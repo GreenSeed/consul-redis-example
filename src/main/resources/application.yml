@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: consred-example
+  cloud:
+    consul:
+      host: 127.0.0.1
+      port: 8500
+      discovery:
+        instanceId: ${spring.application.name}:${random.value}
+      config:
+        enabled: true
