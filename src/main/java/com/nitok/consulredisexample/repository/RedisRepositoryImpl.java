@@ -30,7 +30,8 @@ public class RedisRepositoryImpl implements RedisRepository {
 
     @Override
     public void deleteAllProducts() {
-        hashOperations.delete(KEY);
+        Object[] objects = findAllProducts().keySet().toArray();
+        hashOperations.delete(KEY, objects);
     }
 
     @Override

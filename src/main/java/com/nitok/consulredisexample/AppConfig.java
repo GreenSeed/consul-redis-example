@@ -1,5 +1,6 @@
 package com.nitok.consulredisexample;
 
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
@@ -28,12 +29,19 @@ public class AppConfig {
      */
     @Bean
     JedisConnectionFactory jedisConnectionFactory() {
-        List<ServiceInstance> instanceList = discoveryClient.getInstances("redis");
-        ServiceInstance redisInstance = instanceList.get(0);
+        ServiceInstance redisInstance = redisNode();
+        LoggerFactory.getLogger(AppConfig.class).error("redis node host "+redisInstance.getHost());
         RedisStandaloneConfiguration configuration = new RedisStandaloneConfiguration();
         configuration.setHostName(redisInstance.getHost());
         configuration.setPort(redisInstance.getPort());
         return new JedisConnectionFactory(configuration);
+    }
+
+    ServiceInstance redisNode() {
+        return discoveryClient.getInstances("redis")
+                .stream()
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("cannot find redis node"));
     }
 
     @Bean

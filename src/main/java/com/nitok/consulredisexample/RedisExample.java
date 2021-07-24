@@ -34,5 +34,11 @@ public class RedisExample {
 
         logger.warn("Снова читаем продукты:");
         redisRepository.findAllProducts().forEach((o, o2) -> logger.warn(o2));
+
+        logger.warn("Удаляем все что есть");
+        redisRepository.deleteAllProducts();
+
+        logger.warn("Снова читаем продукты:");
+        redisRepository.findAllProducts().forEach((o, o2) -> logger.warn(o2));
     }
 }
