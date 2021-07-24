@@ -4,7 +4,9 @@ plugins {
     id 'java'
 }
 
-group = 'com.nitok'
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+group = 'com.nitok.consulredisexample'
 version = '0.0.1-SNAPSHOT'
 
 repositories {
@@ -15,6 +17,11 @@ ext {
     set('springCloudVersion', "2020.0.3")
 }
 
+sourceSets.main.java.srcDirs = ['src/main/java']
+sourceSets.main.resources.srcDirs = ['src/main/resources']
+sourceSets.test.java.srcDirs = ['src/test/java']
+sourceSets.test.resources.srcDirs = ['src/test/resources']
+
 dependencies {
     implementation 'redis.clients:jedis'
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
@@ -22,6 +29,7 @@ dependencies {
     implementation 'org.springframework.cloud:spring-cloud-starter-bootstrap'
     implementation 'org.springframework.cloud:spring-cloud-starter-consul-config'
     implementation 'org.springframework.cloud:spring-cloud-starter-consul-discovery'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
@@ -33,4 +41,10 @@ dependencyManagement {
 
 test {
     useJUnitPlatform()
+}
+
+bootJar {
+    manifest {
+        attributes 'Start-Class': 'com.nitok.consulredisexample.ConsulRedisExampleApplication'
+    }
 }

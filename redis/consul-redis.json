@@ -1,0 +1,31 @@
+{
+  "node_name": "consul-client",
+  "data_dir": "/consul/data",
+  "server": false,
+  "retry_join": [
+    "consul"
+  ],
+  "enable_local_script_checks": true,
+  "encrypt": "Bi2PmGQTY3qmlYkC7nVNRNYWmUwW/fM3aakcZxJvxI4=",
+  "service": {
+    "id": "redisnode",
+    "name": "redis",
+    "tags": [
+      "master"
+    ],
+    "port": 6379,
+    "checks": [
+      {
+        "id": "redis-health",
+        "name": "Redis Health Status",
+        "shell": "/bin/sh",
+        "args": [
+          "/bin/sh",
+          "-c",
+          "/usr/local/bin/redis-cli -h 127.0.0.1 -p 6379 info | grep role:master || exit 2"
+        ],
+        "interval": "5s"
+      }
+    ]
+  }
+}

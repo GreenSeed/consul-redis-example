@@ -1,11 +1,12 @@
-
 spring:
   application:
     name: consred-example
   cloud:
     consul:
       discovery:
-#        healthCheckPath: ${management.server.servlet.context-path}/health
         instanceId: ${spring.application.name}:${random.value}
+      config:
+        enabled: true
+
 server:
   port: 8080

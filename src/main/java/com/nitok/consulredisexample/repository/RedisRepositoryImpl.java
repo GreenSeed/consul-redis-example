@@ -31,6 +31,9 @@ public class RedisRepositoryImpl implements RedisRepository {
     @Override
     public void deleteAllProducts() {
         Object[] objects = findAllProducts().keySet().toArray();
+        if (objects.length == 0) {
+            return;
+        }
         hashOperations.delete(KEY, objects);
     }
 
@@ -46,6 +49,10 @@ public class RedisRepositoryImpl implements RedisRepository {
 
     @Override
     public Product findProductById(String id) {
-        return (Product) hashOperations.get(KEY, id);
+        String name = (String) hashOperations.get(KEY, id);
+        if (name == null) {
+            return null;
+        }
+        return new Product(id, name);
     }
 }
