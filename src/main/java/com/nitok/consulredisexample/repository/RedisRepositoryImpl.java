@@ -43,12 +43,12 @@ public class RedisRepositoryImpl implements RedisRepository {
     }
 
     @Override
-    public void deleteById(String id) {
+    public void deleteById(Long id) {
         hashOperations.delete(KEY, id);
     }
 
     @Override
-    public Product findProductById(String id) {
+    public Product findProductById(Long id) {
         String name = (String) hashOperations.get(KEY, id);
         if (name == null) {
             return null;

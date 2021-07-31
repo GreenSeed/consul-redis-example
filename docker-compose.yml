@@ -11,27 +11,49 @@ services:
     environment:
       SPRING_CLOUD_CONSUL_HOST: consul
       SPRING_CLOUD_CONSUL_PORT: 8500
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: test-password
+      SPRING_DATASOURCE_DBNAME: postgres
     depends_on:
       - redis
       - consul
+      - postgres
     ports:
       - 8080:8080
 
   redis:
     image: redis-server-with-consul:1.0
     container_name: redis
-    restart: always
+    restart: unless-stopped
     build:
       context: redis/
     volumes:
       - ./redis/consul-redis.json:/consul/config/consul-redis.json:ro
     networks:
       - appnet
+    depends_on:
+      - consul
+
+  postgres:
+    image: postgres-server-with-consul:1.0
+    container_name: postgres
+    restart: unless-stopped
+    build:
+      context: postgresql/
+    volumes:
+      - ./postgresql/consul-postgres.json:/consul/config/consul-postgres.json:ro
+      - ./postgresql/data:/var/lib/postgresql/data:rw
+    environment:
+      POSTGRES_PASSWORD: test-password
+    networks:
+      - appnet
+    depends_on:
+      - consul
 
   consul:
     image: consul:1.9.7
     container_name: consul
-    restart: always
+    restart: unless-stopped
     networks:
       - appnet
     volumes:

@@ -11,7 +11,7 @@ public interface RedisRepository {
 
     void deleteAllProducts();
 
-    void deleteById(String id);
+    void deleteById(Long id);
 
-    Product findProductById(String id);
+    Product findProductById(Long id);
 }

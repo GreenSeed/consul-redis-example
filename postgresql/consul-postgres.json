@@ -1,5 +1,5 @@
 {
-  "node_name": "consul-redis-client",
+  "node_name": "consul-postgres-client",
   "data_dir": "/consul/data",
   "server": false,
   "retry_join": [
@@ -8,20 +8,20 @@
   "enable_local_script_checks": true,
   "encrypt": "Bi2PmGQTY3qmlYkC7nVNRNYWmUwW/fM3aakcZxJvxI4=",
   "service": {
-    "id": "redisnode",
-    "name": "redis",
+    "id": "postgresnode",
+    "name": "postgres",
     "tags": [
       "master"
     ],
-    "port": 6379,
+    "port": 5432,
     "checks": [
       {
-        "id": "redis-health",
-        "name": "Redis Health Status",
+        "id": "postgres-health",
+        "name": "Postgresql Health Status",
         "args": [
           "/bin/sh",
           "-c",
-          "/usr/local/bin/redis-cli -h 127.0.0.1 -p 6379 info | grep role:master || exit 2"
+          "su postgres -c '/usr/local/bin/pg_ctl status | grep -e is\\ running || exit 2'"
         ],
         "interval": "5s"
       }

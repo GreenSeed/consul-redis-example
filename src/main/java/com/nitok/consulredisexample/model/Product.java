@@ -1,19 +1,30 @@
 package com.nitok.consulredisexample.model;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "products")
 public class Product {
-    private String id;
+    private Long id;
     private String name;
 
-    public Product(String id, String name) {
+    public Product(Long id, String name) {
         this.id = id;
         this.name = name;
     }
 
-    public String getId() {
+    public Product() {
+
+    }
+
+    @Id
+    public Long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
