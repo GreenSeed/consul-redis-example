@@ -14,10 +14,13 @@ services:
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: test-password
       SPRING_DATASOURCE_DBNAME: postgres
+      RABBITMQ_USER: user
+      RABBITMQ_PASSWORD: test-password
     depends_on:
       - redis
       - consul
       - postgres
+      - rabbitmq
     ports:
       - 8080:8080
 
@@ -49,6 +52,26 @@ services:
       - appnet
     depends_on:
       - consul
+
+  rabbitmq:
+    image: rabbitmq-with-consul:1.0
+    container_name: rabbitmq
+    restart: unless-stopped
+    build:
+      context: rabbitmq/
+    volumes:
+      - ./rabbitmq/consul-rabbitmq.json:/consul/config/consul-rabbitmq.json:ro
+      - ./rabbitmq/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf:ro
+      - ./rabbitmq/data:/bitnami:rw
+    environment:
+      RABBITMQ_USER: user
+      RABBITMQ_PASSWORD: test-password
+    networks:
+      - appnet
+    depends_on:
+      - consul
+    ports:
+    - 15672:15672
 
   consul:
     image: consul:1.9.7

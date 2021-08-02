@@ -8,7 +8,7 @@ RUN mkdir -p /consul/config
 RUN mkdir -p /consul/data
 COPY consul-postgres.json /consul/config/consul-postgres.json
 
-#чтобы запустить redis и consul одновременно решил сделать это через отдельный файл
+#чтобы запустить postgresql и consul одновременно решил сделать это через отдельный файл
 RUN mkdir /scripts
 COPY run.sh /scripts/run.sh
 RUN chmod +x /scripts/run.sh

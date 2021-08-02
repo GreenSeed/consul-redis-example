@@ -1,6 +1,14 @@
 package com.nitok.consulredisexample;
 
+import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
+import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.slf4j.LoggerFactory;
+import org.springframework.amqp.core.Binding;
+import org.springframework.amqp.core.BindingBuilder;
+import org.springframework.amqp.core.Queue;
+import org.springframework.amqp.core.TopicExchange;
+import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
+import org.springframework.amqp.rabbit.listener.adapter.MessageListenerAdapter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.jdbc.DataSourceBuilder;
@@ -72,6 +80,40 @@ public class AppConfig {
         dataSourceBuilder.username(datasourceUsername);
         dataSourceBuilder.password(datasourcePassword);
         return dataSourceBuilder.build();
+    }
+
+    static final String topicExchangeName = "spring-boot-exchange";
+
+    static final String queueName = "test-queue";
+
+    @Bean
+    Queue queue() {
+        return new Queue(queueName, false);
+    }
+
+    @Bean
+    TopicExchange exchange() {
+        return new TopicExchange(topicExchangeName);
+    }
+
+    @Bean
+    Binding binding(Queue queue, TopicExchange exchange) {
+        return BindingBuilder.bind(queue).to(exchange).with("foo.bar.#");
+    }
+
+    @Value("#{systemEnvironment['RABBITMQ_USER']}")
+    private String rabbitmqUser;
+
+    @Value("#{systemEnvironment['RABBITMQ_PASSWORD']}")
+    private String rabbitmqPassword;
+
+    @Bean
+    ConnectionFactory connectionFactory() {
+        ServiceInstance mqNode = getConsulServiceByName("rabbitmq");
+        CachingConnectionFactory factory = new CachingConnectionFactory(mqNode.getHost(), mqNode.getPort());
+        factory.setUsername(rabbitmqUser);
+        factory.setPassword(rabbitmqPassword);
+        return factory;
     }
 
 }

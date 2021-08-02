@@ -1,0 +1,30 @@
+{
+  "node_name": "consul-rabbitmq-client",
+  "data_dir": "/consul/data",
+  "server": false,
+  "retry_join": [
+    "consul"
+  ],
+  "enable_local_script_checks": true,
+  "encrypt": "Bi2PmGQTY3qmlYkC7nVNRNYWmUwW/fM3aakcZxJvxI4=",
+  "service": {
+    "id": "rabbitmqnode",
+    "name": "rabbitmq",
+    "tags": [
+      "master"
+    ],
+    "port": 5672,
+    "checks": [
+      {
+        "id": "rabbitmq-health",
+        "name": "Rabbitmq Health Status",
+        "args": [
+          "/bin/sh",
+          "-c",
+          "/opt/rabbitmq/sbin/rabbitmq-diagnostics -q ping | grep Ping\\ succeeded || exit 2"
+        ],
+        "interval": "5s"
+      }
+    ]
+  }
+}
